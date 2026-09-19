@@ -3,7 +3,7 @@ import axios from 'axios';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { Activity, Bot, CircleDollarSign, Plus, Repeat2, Sparkles, Target, TrendingUp } from 'lucide-react';
 
-const API = 'http://localhost:5000/api';
+const API = `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api`;
 const COLORS = ['#35c48d', '#ffb454', '#ff6b6b', '#6ea8fe', '#c084fc'];
 const headers = () => ({ headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
 const formatMoney = (amount) => `₹${Number(amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
