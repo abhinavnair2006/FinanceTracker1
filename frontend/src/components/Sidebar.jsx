@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
-import { LayoutDashboard, WalletCards, LogOut } from 'lucide-react';
+import { AuthContext } from '../context/AuthContextValue';
+import { Bot, ChartNoAxesCombined, Eye, EyeOff, Goal, LayoutDashboard, List, LogOut } from 'lucide-react';
 
-export default function Sidebar() {
+export default function Sidebar({ privacyMode, setPrivacyMode }) {
   const { logout, user } = useContext(AuthContext);
 
   const sidebarStyle = {
@@ -43,12 +43,32 @@ export default function Sidebar() {
       </div>
 
       <nav style={{ flex: 1 }}>
-        <NavLink to="/" style={navLinkStyle}>
+        <NavLink to="/" end style={navLinkStyle}>
           <LayoutDashboard size={20} style={{ marginRight: '1rem' }} />
-          Dashboard
+          Overview
+        </NavLink>
+        <NavLink to="/insights" style={navLinkStyle}>
+          <ChartNoAxesCombined size={20} style={{ marginRight: '1rem' }} />
+          Insights
+        </NavLink>
+        <NavLink to="/ai-tools" style={navLinkStyle}>
+          <Bot size={20} style={{ marginRight: '1rem' }} />
+          AI tools
+        </NavLink>
+        <NavLink to="/goals" style={navLinkStyle}>
+          <Goal size={20} style={{ marginRight: '1rem' }} />
+          Goals
+        </NavLink>
+        <NavLink to="/transactions" style={navLinkStyle}>
+          <List size={20} style={{ marginRight: '1rem' }} />
+          Transactions
         </NavLink>
       </nav>
 
+      <button onClick={() => setPrivacyMode((enabled) => !enabled)} className="privacy-toggle" aria-pressed={privacyMode}>
+        {privacyMode ? <EyeOff size={18} /> : <Eye size={18} />}
+        {privacyMode ? 'Privacy mode on' : 'Privacy mode'}
+      </button>
       <button onClick={logout} className="btn" style={{ background: 'transparent', color: 'var(--text-secondary)', border: '1px solid var(--border-color)', marginTop: 'auto' }}>
         <LogOut size={20} style={{ marginRight: '0.5rem' }} />
         Logout

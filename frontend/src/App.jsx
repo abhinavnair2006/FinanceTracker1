@@ -1,6 +1,7 @@
-import React, { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, AuthContext } from './context/AuthContext';
+import { AuthProvider } from './context/AuthContext';
+import { AuthContext } from './context/AuthContextValue';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
@@ -14,11 +15,12 @@ const PrivateRoute = ({ children }) => {
 
 function AppContent() {
   const { user } = useContext(AuthContext);
+  const [privacyMode, setPrivacyMode] = useState(false);
 
   return (
     <Router>
       <div className={user ? 'app-container' : ''}>
-        {user && <Sidebar />}
+        {user && <Sidebar privacyMode={privacyMode} setPrivacyMode={setPrivacyMode} />}
         <main className={user ? 'main-content' : ''}>
           <Routes>
             <Route path="/login" element={<Login />} />
@@ -27,10 +29,14 @@ function AppContent() {
               path="/" 
               element={
                 <PrivateRoute>
-                  <Dashboard />
+                  <Dashboard view="overview" privacyMode={privacyMode} />
                 </PrivateRoute>
               } 
             />
+            <Route path="/ai-tools" element={<PrivateRoute><Dashboard view="tools" privacyMode={privacyMode} /></PrivateRoute>} />
+            <Route path="/goals" element={<PrivateRoute><Dashboard view="goals" privacyMode={privacyMode} /></PrivateRoute>} />
+            <Route path="/transactions" element={<PrivateRoute><Dashboard view="transactions" privacyMode={privacyMode} /></PrivateRoute>} />
+            <Route path="/insights" element={<PrivateRoute><Dashboard view="insights" privacyMode={privacyMode} /></PrivateRoute>} />
           </Routes>
         </main>
       </div>

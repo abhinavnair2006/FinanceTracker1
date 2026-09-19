@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
+import { useState, useContext } from 'react';
+import { AuthContext } from '../context/AuthContextValue';
 import { useNavigate, Link } from 'react-router-dom';
 
 export default function Register() {

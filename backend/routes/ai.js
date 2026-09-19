@@ -18,9 +18,10 @@ router.get('/insights', auth, async (req, res) => {
     const summary = transactions.map(t => `${t.date.toISOString().split('T')[0]} - ${t.type.toUpperCase()}: $${t.amount} (${t.category}) - ${t.description || 'No description'}`).join('\n');
     
     const prompt = `
-      You are an expert financial advisor. Analyze the following recent transactions for a user and provide concise, actionable financial advice. 
-      Focus on spending habits, potential savings, and overall financial health. 
-      Format your response with clear headings and bullet points.
+      You are an expert financial advisor. Analyze the following recent transactions for a user and provide concise, actionable financial advice.
+      Focus on spending habits, potential savings, and overall financial health.
+      Use Indian Rupees (₹) for all money values.
+      Format the response as short heading sections separated by blank lines, without markdown asterisks or code fences.
       Keep the tone encouraging but professional. Do not use markdown backticks in your response.
 
       Transactions:
@@ -42,6 +43,28 @@ router.get('/insights', auth, async (req, res) => {
   } catch (error) {
     console.error('AI Insight error:', error);
     res.status(500).json({ message: 'Error generating AI insights', error: error.message });
+  }
+});
+
+router.post('/coach', auth, async (req, res) => {
+  try {
+    const { question, summary } = req.body;
+    if (!question || !question.trim()) {
+      return res.status(400).json({ message: 'Ask the coach a question first' });
+    }
+    if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'your_gemini_api_key_here') {
+      return res.json({ answer: 'Add your GEMINI_API_KEY in the backend .env file to enable the AI coach.' });
+    }
+
+    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: `You are a practical personal finance coach for Indian users. Answer the user's question in under 150 words with specific, cautious advice. Never promise returns or give regulated investment advice. Use Indian Rupees (₹) for any amounts. Use this user's current summary when relevant: ${JSON.stringify(summary || {})}\n\nQuestion: ${question}`
+    });
+    res.json({ answer: response.text });
+  } catch (error) {
+    console.error('AI Coach error:', error);
+    res.status(500).json({ message: 'Error generating coach response' });
   }
 });
 

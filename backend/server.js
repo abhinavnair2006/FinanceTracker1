@@ -8,6 +8,7 @@ dotenv.config();
 const authRoutes = require('./routes/auth');
 const transactionRoutes = require('./routes/transactions');
 const aiRoutes = require('./routes/ai');
+const featureRoutes = require('./routes/features');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/features', featureRoutes);
 
 // Database Connection
 console.log("URI is:", process.env.MONGODB_URI);
