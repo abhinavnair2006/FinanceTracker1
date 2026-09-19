@@ -24,7 +24,7 @@ app.use('/api/ai', aiRoutes);
 app.use('/api/features', featureRoutes);
 
 // Database Connection
-console.log("URI is:", process.env.MONGODB_URI);
+
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
     console.log('Connected to MongoDB');
